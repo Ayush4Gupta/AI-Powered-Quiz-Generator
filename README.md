@@ -62,9 +62,6 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 - **Smart Reranking**: Neural reranking with Cohere for optimal results
 - **Session Isolation**: Prevents data leakage between different document sets
 
-## 🤝 Contributing
-
-Contributions welcome! Please read the contributing guidelines and submit pull requests.
 
 ## 📄 License
 
