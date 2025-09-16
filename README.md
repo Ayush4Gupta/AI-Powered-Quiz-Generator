@@ -35,8 +35,7 @@ cp .env.example .env
 docker-compose up -d
 
 # Or run locally
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+quick-start.bat
 ```
 
 ## 🔧 Configuration
@@ -48,13 +47,6 @@ GROQ_API_KEY=your_groq_key
 WEAVIATE_URL=http://localhost:8080
 CELERY_BROKER_URL=redis://localhost:6379/0
 ```
-
-## 📚 API Endpoints
-
-- `POST /api/v1/quizzes/generate` - Generate quiz from topic
-- `POST /api/v1/quizzes/ingest` - Upload PDF documents
-- `GET /api/v1/sessions/list` - Manage content sessions
-- `GET /docs` - Interactive API documentation
 
 ## 🧠 How It Works
 
