@@ -8,7 +8,6 @@ An intelligent quiz generation system that creates multiple-choice questions fro
 - **RAG Pipeline**: Retrieval-Augmented Generation with PDF document ingestion
 - **Session Management**: Isolated content processing per user session
 - **Background Processing**: Async PDF processing with Celery
-- **Offline Fallback**: Continues working without internet connectivity
 - **Production Ready**: Docker containerization, monitoring, and comprehensive API
 
 ## 🛠️ Tech Stack
