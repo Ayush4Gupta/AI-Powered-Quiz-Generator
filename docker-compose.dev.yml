@@ -1,0 +1,41 @@
+# Fast Docker Compose - Development Only
+# Uses volume mounts instead of building images
+
+services:
+  weaviate:
+    image: semitechnologies/weaviate:1.24.9
+    ports: [ "8080:8080" ]
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+    volumes:
+      - weav_data:/var/lib/weaviate
+
+  redis:
+    image: redis:7-alpine
+    ports: [ "6379:6379" ]
+
+  # Fast development app - mounts code directly
+  app-dev:
+    image: python:3.11-slim
+    working_dir: /code
+    command: >
+      bash -c "
+        pip install --no-cache-dir -r requirements.txt &&
+        python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/code
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - WEAVIATE_URL=http://weaviate:8080
+      - COHERE_API_KEY=${COHERE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    depends_on: [ weaviate, redis ]
+
+volumes:
+  weav_data:

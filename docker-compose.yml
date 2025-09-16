@@ -1,0 +1,34 @@
+services:
+  weaviate:
+    image: semitechnologies/weaviate:1.24.9
+    ports: [ "8080:8080" ]
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+    volumes:
+      - weav_data:/var/lib/weaviate
+  redis:
+    image: redis:7-alpine
+    ports: [ "6379:6379" ]
+    restart: always
+  celery_worker:
+    build: .
+    volumes:
+      - .:/code
+    working_dir: /code
+    command: celery -A app.background.tasks worker --loglevel=info -P solo
+    environment:
+      - PYTHONPATH=/code
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - WEAVIATE_URL=http://weaviate:8080
+      - COHERE_API_KEY=${COHERE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    depends_on:
+      redis:
+        condition: service_started
+      weaviate:
+        condition: service_started
+    restart: always
+volumes:
+  weav_data:
